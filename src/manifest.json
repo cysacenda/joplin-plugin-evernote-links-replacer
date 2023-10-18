@@ -1,0 +1,15 @@
+{
+	"manifest_version": 1,
+	"id": "com.joplin.evernote-links-replacer",
+	"app_min_version": "2.12",
+	"version": "1.0.0",
+	"name": "Joplin Evernote Links Replacer",
+	"description": "Replace Evernote links in Joplin",
+	"author": "Cyril SACENDA",
+	"homepage_url": "https://github.com/cysacenda/joplin-plugin-evernote-links-replacer",
+	"repository_url": "https://github.com/cysacenda/joplin-plugin-evernote-links-replacer",
+	"keywords": [],
+	"categories": [],
+	"screenshots": [],
+	"icons": {}
+}
