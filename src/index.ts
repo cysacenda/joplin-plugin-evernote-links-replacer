@@ -3,13 +3,14 @@ import joplin from 'api';
 joplin.plugins.register({
     onStart: async function() {
 		console.info('Plugin Evernote Links Converter: Start');
+		await joplin.views.dialogs.showMessageBox('Plugin Evernote Links Converter: Start');
 
         // Assumons que `noteNameToIdMap` est votre dictionnaire de nom de note à ID.
         const noteNameToIdMap = await buildNoteNameToIdMap();
 		console.info(noteNameToIdMap);
 
         // Cherchez toutes les notes
-        const notes = await joplin.data.get(['notes'], { fields: ['id', 'title', 'body'] });
+        const notes = await getAllNotes();
 
 		console.info("All notes were retrieved !");
 		console.info(notes);
@@ -19,7 +20,7 @@ joplin.plugins.register({
 		let iLinksFound = 0;
 		let iLinksReplaced = 0;
 
-        for (const note of notes.items) {
+        for (const note of notes) {
 			console.info("************************************************");
 			console.info("***** Processing note : " + note.title + " *****");
             
@@ -61,12 +62,15 @@ joplin.plugins.register({
             }
 			iNotesProcessed++;
         }
-
+		
 		console.info("***** End report : *****");
 		console.info("Processed notes : " + iNotesProcessed);
 		console.info("Notes with Evernote links : " + iNotesWithEvernoteLinks);
 		console.info("Links found : " + iLinksFound);
 		console.info("Links replaced : " + iLinksReplaced);
+
+		await joplin.views.dialogs.showMessageBox("Processed notes : " + iNotesProcessed + "\nNotes with Evernote links : " 
+			+ iNotesWithEvernoteLinks + "\nLinks found : " + iLinksFound + "\nLinks replaced : " + iLinksReplaced);
 
 		console.info('Plugin Evernote Links Converter: End');
     },
@@ -74,12 +78,31 @@ joplin.plugins.register({
 
 // Cette fonction construit un dictionnaire avec les titres des notes comme clés et les ID des notes comme valeurs
 async function buildNoteNameToIdMap() {
-    const allNotes = await joplin.data.get(['notes'], { fields: ['id', 'title'], limit: 100 }); // Ajustez la limite selon vos besoins
-    const noteNameToIdMap: { [key: string]: string } = {};
+    //const allNotes = await joplin.data.get(['notes'], { fields: ['id', 'title'], limit: 100000 }); // Ajustez la limite selon vos besoins
+    const allNotes = await getAllNotes();
+	const noteNameToIdMap: { [key: string]: string } = {};
 
-    for (const note of allNotes.items) {
+    for (const note of allNotes) {
         noteNameToIdMap[note.title] = note.id;
     }
 
     return noteNameToIdMap;
+}
+
+async function getAllNotes(): Promise<any[]> {
+    const pageSize = 100; // Combien de notes à récupérer à la fois.
+    let allNotes = [];
+    let hasMore = true;
+    let page = 1; 
+
+    while (hasMore) {
+        const notes = await joplin.data.get(['notes'], { fields: ['id', 'title', 'body'], limit: pageSize, page: page });
+        allNotes = allNotes.concat(notes.items);
+
+        hasMore = notes.has_more;
+        page += 1;
+    }
+	console.info('Pages : ' + page);
+
+    return allNotes;
 }
