@@ -11,8 +11,7 @@ Displays process information through Joplin's user interface.
 
 ### How to Use
 Install the plugin via Joplin's Plugin Manager.
-Once installed and activated, navigate to Tools > Replace Evernote Links.
-The plugin will go through all notes and make the necessary replacements.
+Once installed and activated (after Joplin restart), the plugin will go through all notes and make the necessary replacements.
 
 ### Support
 If you encounter any issues with this plugin or have suggestions for improvements, please open an issue on the project's GitHub page.
