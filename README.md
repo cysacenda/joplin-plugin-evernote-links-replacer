@@ -7,6 +7,7 @@ This plugin is designed to streamline the migration from Evernote to Joplin. It 
 ### Features
 Automatically scans all notes.
 Converts Evernote links in the format evernote:///view/... to Joplin links in the format :/NOTE_ID.
+It will only work if the title of le evernote link is the same as the note title it links to.
 Displays process information through Joplin's user interface.
 
 ### How to Use
